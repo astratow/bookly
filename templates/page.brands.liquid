@@ -1,0 +1,108 @@
+<div class="container">
+  <div class="row">    
+      {{ page.content }}
+    
+    
+    <ul class="alphaindex-list">
+      <li class="all-brand">
+        <a class="active readonly dTAllAlphaindex" href="javascript:void(0)" id="dTAllAlphaindex">All</a>
+      </li>
+
+      {% assign array = "A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z|0-9" | split: "|" %}
+
+      {% for item in array %} 
+      <li class="vendor-letter">
+        <a href="javascript:void(0)" data-alphaindex-group="{{ item }}" class="dTAlphaindex" id="dTAlphaIndex-{{ item }}">
+          {{ item }}
+        </a>
+      </li>
+      {% endfor %}
+    </ul> 
+    
+    
+    <div class="brands-list" >
+     {% assign curr = "" %}
+      
+    {% for vendor in shop.vendors %}
+      {% assign first = vendor | strip_html | upcase | truncate: 1, '' %}
+    
+      {% unless first == curr %}
+      <div class="alphaindexTitle alphaindexList alphaindexGroup-{{ first }}" data-alphaindex-group="{{ first }}" style="display:none">
+            <h3>
+              {{ first }}
+           </h3>
+      </div>
+      {% endunless %}
+      {% assign curr = first %}
+      
+      <div class="alphaindexList alphaindexGroup-{{ first }}" data-alphaindex-group="{{ first }}" style="display:none">
+         {{ vendor | link_to_vendor }}
+      </div>
+    
+      
+    {% endfor %}   
+    </div>
+
+ 
+
+  
+  </div>
+</div>
+
+
+<ul class='brand-grid row' style="display:none">
+  
+{% for vendor in shop.vendors %}
+  <li>{{ vendor | link_to_vendor }}</li>
+{% endfor %}   
+</ul>
+
+<style>
+  .alphaindexList {
+     display:none; 
+  }
+</style>  
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $(".dTAlphaindex").click(function(event){
+    event.preventDefault();
+    var self = jQuery(this);
+
+    var dataIndexGroup = self.attr('data-alphaindex-group');
+
+    $('.alphaindexList').slideUp();
+
+    $('.alphaindexGroup-'+ dataIndexGroup).slideDown();
+  });
+  
+  
+  
+  $(".dTAllAlphaindex").click(function(event){
+    event.preventDefault();
+    var self = jQuery(this);
+
+    $('.alphaindexList').slideDown();
+  });
+  
+  
+  var alphaindexGroup = "A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z|0-9";
+  
+  alphaindexGroup = alphaindexGroup.split("|");
+  
+  alphaindexGroup.forEach(function(item, index, array) {
+      
+    if (item == $(".alphaindexGroup-"+item).attr('data-alphaindex-group')){
+      $("#dTAlphaIndex-"+item).addClass('has-records');
+    }else{
+      $("#dTAlphaIndex-"+item).addClass('no-records');
+    }
+  });
+  
+  $("#dTAllAlphaindex").trigger("click");
+  
+});
+</script>
+
+
+  
